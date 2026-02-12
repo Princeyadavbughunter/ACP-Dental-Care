@@ -1,6 +1,6 @@
 'use client';
 
-import Image from "next/image";
+import VideoPlayer from "./VideoPlayer";
 
 interface BeforeAfterGalleryProps {
   onBookAppointment: () => void;
@@ -34,12 +34,9 @@ export default function BeforeAfterGallery({ onBookAppointment }: BeforeAfterGal
               key={index}
               className="group relative rounded-2xl overflow-hidden shadow-lg h-[450px] border-4 border-white hover:border-[var(--brand-gold)] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl bg-black"
             >
-              <video
+              <VideoPlayer
                 src={src}
-                className="w-full h-full object-cover"
-                controls
-                playsInline
-                preload="metadata"
+                className="w-full h-full"
               />
               <div className="absolute top-4 left-4 z-10">
                 <span className="bg-[var(--brand-gold)] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
