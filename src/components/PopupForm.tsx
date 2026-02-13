@@ -28,42 +28,31 @@ export default function PopupForm({ isOpen, onClose, minutes, seconds }: PopupFo
 
     console.log("Form Data to send:", data);
 
-    const scriptURL = ""; // Your Apps Script URL here
+    // Send data to our local API route instead of directly to Google Script
     try {
-      const response = await fetch(scriptURL, {
+      const response = await fetch('/api/book-appointment', {
         method: "POST",
-        mode: "no-cors", // keep for now, needed for Apps Script public endpoint
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
 
-      console.log("Raw fetch response:", response);
+      const result = await response.json();
 
-      // With no-cors, you cannot read response body, so we log success directly
-      try {
-        const result = await response.json();
-        console.log("Parsed response:", result);
-
-        if (result.result === "success") {
-          alert("✅ Appointment booked successfully!");
-          onClose();
-          router.push("/thank-you");
-        } else {
-          throw new Error("Form submission failed");
-        }
-      } catch (err) {
-        console.log("No JSON response due to no-cors. Assuming success.", err);
+      if (response.ok && result.result === "success") {
         alert("✅ Appointment booked successfully!");
         onClose();
         router.push("/thank-you");
+      } else {
+        throw new Error(result.error || "Form submission failed");
       }
 
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("❌ Something went wrong. Please try again later.");
     }
+
   };
 
   if (!isOpen) return null;
@@ -73,15 +62,15 @@ export default function PopupForm({ isOpen, onClose, minutes, seconds }: PopupFo
       <div className="bg-white rounded-lg p-6 w-full max-w-xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl md:text-2xl font-bold text-[var(--brand-dark)]">Book Your Appointment</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-[#01659e]">Book Your Appointment</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
         </div>
 
         {/* Offer info */}
-        <div className="bg-gray-50 p-3 md:p-4 rounded-lg mb-4 border-l-4 border-[var(--brand-gold)]">
+        <div className="bg-gray-50 p-3 md:p-4 rounded-lg mb-4 border-l-4 border-[#01659e]">
           <p className="text-sm md:text-base text-gray-700 text-center">
             <strong>Includes:</strong> Professional Consultation & Digital Scan
-            <span className="text-[var(--brand-gold)] font-bold"> with Dr. Ashish Chhajlani Jain</span>
+            <span className="text-[#01659e] font-bold"> with Our Certified Implantologist</span>
           </p>
         </div>
 
@@ -139,7 +128,7 @@ export default function PopupForm({ isOpen, onClose, minutes, seconds }: PopupFo
 
           <button
             type="submit"
-            className="w-full bg-[var(--brand-gold)] text-white py-3 md:py-4 rounded-lg font-bold text-lg hover:bg-[#b48e2d] transition-colors"
+            className="w-full bg-brandBlue text-white py-3 md:py-4 rounded-lg font-bold text-lg hover:opacity-90 transition-colors"
           >
             Book Appointment
           </button>
